@@ -98,7 +98,7 @@ def relu(a: float) -> float:
         The input if it is positive, otherwise 0.
 
     """
-    return max(0, a)
+    return max(0.0, a)
 
 
 def log(a: float) -> float:
