@@ -28,3 +28,15 @@ However, in Module 1 here, there exists `numba 0.56`, which requires the python 
 So I change the version of numba to 0.57 here, which meet the requirement.
 
 Let me try if there exits any problem. Then maybe I will make a PR.
+
+---
+
+TODO: There seems a lot of mistakes in documents.
+
+For example, in https://minitorch.github.io/module1/scalar/#overriding-numbers, "with proxy a class" should be replaced with "with a proxy class"
+
+And {.title-ref} is not rendered in https://minitorch.github.io/module1/derivative/#numerical-derivatives
+
+Double symbol exists in https://minitorch.github.io/module1/derivative/#numerical-derivatives.
+
+Maybe I will make a PR later.
