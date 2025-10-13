@@ -164,7 +164,11 @@ class Scalar:
         assert h.ctx is not None
 
         # TODO: Implement for Task 1.3.
-        raise NotImplementedError("Need to implement for Task 1.3")
+        if self.is_leaf():
+            return []
+        else:
+            res = h.last_fn._backward(h.ctx, d_output)
+            return zip(h.inputs, res)
 
     def backward(self, d_output: Optional[float] = None) -> None:
         """
