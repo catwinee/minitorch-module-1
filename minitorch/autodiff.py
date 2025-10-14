@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Iterable, List, Tuple, Set, Dict
 
 from typing_extensions import Protocol
 
@@ -63,7 +63,20 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
         Non-constant Variables in topological order starting from the right.
     """
     # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    ret: List[Variable] = list()
+    visited_id_set: Set[Int] = set()
+
+    def visit(variable: Variable) -> None:
+        if variable.unique_id in visited_id_set:
+            return
+        visited_id_set.add(variable.unique_id)
+        if not variable.is_leaf():
+            for parent in variable.parents:
+                visit(parent)
+        ret.append(variable)
+
+    visit(variable)
+    return ret
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -78,11 +91,26 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     # TODO: Implement for Task 1.4.
-    for var, der in variable.chain_rule(deriv):
-        if var.is_leaf():
-            var.accumulate_derivative(der)
+
+    ## Naive implementation using recurrence
+    # for var, der in variable.chain_rule(deriv):
+    #     if var.is_leaf():
+    #         var.accumulate_derivative(der)
+    #     else:
+    #         backpropagate(var, der)
+
+    # interactive implementation:
+    order = reversed(list(topological_sort(variable)))
+    grad_map: Dict[Int, float] = {}
+    grad_map[variable.unique_id] = deriv
+    for node in order:
+        if node.is_leaf():
+            node.accumulate_derivative(grad_map[node.unique_id])
         else:
-            backpropagate(var, der)
+            for parent, der in node.chain_rule(grad_map[node.unique_id]):
+                if parent.unique_id not in grad_map:
+                    grad_map[parent.unique_id] = 0.0
+                grad_map[parent.unique_id] += der
 
 
 @dataclass
